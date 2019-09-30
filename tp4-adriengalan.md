@@ -6,18 +6,21 @@ ID ETUDIANT : 11364
 
 **• Commencez par créer deux groupes groupe1 et groupe2**
 ```sudo addgroup groupe1
-addgroup groupe2```
+addgroup groupe2
+```
 **• Créez ensuite 4 utilisateurs u1, u2, u3, u4 avec la commande useradd, en demandant la création de
 leur dossier personnel et avec bash pour shell**
 
-```useradd u1 -m --shell /bin/bash
+```
+useradd u1 -m --shell /bin/bash
 useradd u2 -m --shell /bin/bash
 useradd u3 -m --shell /bin/bash
-useradd u4 -m --shell /bin/bash```
+useradd u4 -m --shell /bin/bash
+```
 
 **• Placez les utilisateurs dans les groupes :
 - u1, u2, u4 dans groupe1
-- u2, u3, u4 dans groupe2**
+- u2, u3, u4 dans groupe2 **
 
 ```
 sudo usermod -a -G groupe2 u1
@@ -31,9 +34,12 @@ sudo usermod -a -G groupe2 u4
 
 **• Donnez deux moyens d’afficher les membres de groupe2**
 
-```cat /etc/group | grep "groupe2"```
-```sudo apt install members
-members groupe2```
+```
+cat /etc/group | grep "groupe2"
+```
+sudo apt install members
+members groupe2
+```
 
 **• Faites de groupe1 le groupe propriétaire de /home/u1 et /home/u2 et de groupe2 le groupe propriétaire
 de /home/u3 et /home/u4**
