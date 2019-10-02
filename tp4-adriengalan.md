@@ -18,9 +18,9 @@ useradd u3 -m --shell /bin/bash
 useradd u4 -m --shell /bin/bash
 ```
 
-**• Placez les utilisateurs dans les groupes :
-- u1, u2, u4 dans groupe1
-- u2, u3, u4 dans groupe2 **
+**• Placez les utilisateurs dans les groupes :**
+**- u1, u2, u4 dans groupe1**
+**- u2, u3, u4 dans groupe2**
 
 ```
 sudo usermod -a -G groupe2 u1
@@ -37,6 +37,7 @@ sudo usermod -a -G groupe2 u4
 ```
 cat /etc/group | grep "groupe2"
 ```
+```
 sudo apt install members
 members groupe2
 ```
@@ -51,9 +52,9 @@ chown :groupe2 /home/u3
 chown :groupe2 /home/u4
 ```
 
-**• Remplacez le groupe primaire des utilisateurs :
-- groupe1 pour u1 et u2
-- groupe2 pour u3 et u4**
+**• Remplacez le groupe primaire des utilisateurs :**
+**- groupe1 pour u1 et u2**
+**- groupe2 pour u3 et u4**
 
 ```
 sudo usermod u1 -g groupe1
@@ -193,25 +194,60 @@ sudo chmod 600 test/fichier
 echo "echo Hello" > fichier
 ```
 
-Les droits sont revenus, j'imagine.. Non je sais pas.
+ça fonctionne. Honnêtement aucune idée de pourquoi, où alors echo n'a pas besoin des droits de lecture pour écrire le contenu d'un fichier dans un autre ? ça m'étonne.
 
 **• Essayez d’exécuter le fichier. Est-ce que cela fonctionne ? Et avec sudo ? Expliquez.**
 
+Impossible d'exécuter le fichier en utilisateur lambda car on a pas les droits à l'inverse de root pour qui ça fonctionne. 
+
+
+
+### A partir d'ici, tp fait avec ubuntu 12.0.4 (si ça change quoi que ce soit) faute d'avoir la machine virtuelle de l'école sous la main.
 
 **• Placez-vous dans le répertoire test, et retirez-vous le droit en lecture pour ce répertoire. Listez le
 contenu du répertoire, puis exécutez ou affichez le contenu du fichier fichier. Qu’en déduisez-vous ?
 Rétablissez le droit en lecture sur test**
 
+```
+chmod u-r test
+touch test/fichier
+cd test
+ls test
+cat fichier
+```
+Les permissions sont refusées pour le contenu du répertoire ainsi que pour l'affichage du contenu du fichier. On a pas les droits de lecture du dossier (qu'on vient d'enlever donc c'est normal) de plus, on n'a toujours pas les droits de lecture sur le fichier.
+
+```
+chmod u+r ../test
+```
 
 **• Créez dans test un fichier nouveau ainsi qu’un répertoire sstest. Retirez au fichier nouveau et au
 répertoire test le droit en écriture. Tentez de modifier le fichier nouveau. Rétablissez ensuite le droit
 en écriture au répertoire test. Tentez de modifier le fichier nouveau, puis de le supprimer. 
 Que pouvez vous déduire de toutes ces manipulations ?**
 
+```
+mkdir sstest
+touch fichierN
+chmod u-w fichierN
+chmod u-w ../test
+echo "test" >> fichierN -- pas les permissions
+chmod u+w ../test
+echo "test" >> fichierN -- pas les permissions
+rm fichierN -- ça fonctionne mais ça demande confirmation (protection en écriture)
+```
+
+On peut en déduire que les droits des sous fichiers ne sont pas affectés par les droits des dossiers parents.
+
+note pour la correction : c'est peut être une question bête mais je me demande à quoi sert le sous répertoire sstest, peut être que c'est une erreur.
+
+
 
 **• Positionnez vous dans votre répertoire personnel, puis retirez le droit en exécution du répertoire test.
 Tentez de créer, supprimer, ou modifier un fichier dans le répertoire test, de vous y déplacer, d’en
 lister le contenu, etc…Qu’en déduisez vous quant au sens du droit en exécution pour les répertoires ?**
+
+
 
 
 **• Rétablissez le droit en exécution du répertoire test. Positionnez vous dans ce répertoire et retirez lui
