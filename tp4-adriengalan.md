@@ -239,14 +239,13 @@ rm fichierN -- ça fonctionne mais ça demande confirmation (protection en écri
 
 On peut en déduire que les droits des sous fichiers ne sont pas affectés par les droits des dossiers parents.
 
-note pour la correction : c'est peut être une question bête mais je me demande à quoi sert le sous répertoire sstest, peut être que c'est une erreur.
-
 
 
 **• Positionnez vous dans votre répertoire personnel, puis retirez le droit en exécution du répertoire test.
 Tentez de créer, supprimer, ou modifier un fichier dans le répertoire test, de vous y déplacer, d’en
 lister le contenu, etc…Qu’en déduisez vous quant au sens du droit en exécution pour les répertoires ?**
 
+Impossible de faire quoi que ce soit avec le contenu du répertoire test. Donc l'absence de droit d'exécution d'un dossier interdit toute action sur son contenu, et même de s'y déplacer.
 
 
 
@@ -256,31 +255,68 @@ test, de vous déplacer dans ssrep, de lister son contenu. Qu’en concluez-vous
 droits que l’on possède sur le répertoire courant ? Peut-on retourner dans le répertoire parent avec ”cd
 ..” ? Pouvez-vous donner une explication ?**
 
+Les résultats sont les mêmes qu'à la question précédente. On peut en conclure que l'influence des droits que l'on possède sur le répertoire courant est la même que sur n'importe quel répertoire. On a le droit d'exécution sur le répertoire parent donc on peut y accéder. 
+
 
 **• Rétablissez le droit en exécution du répertoire test. Attribuez au fichier fichier les droits suffisants
 pour qu’une autre personne de votre groupe puisse y accéder en lecture, mais pas en écriture.**
 
+```
+chmod g+r fichier
+chmod g-w fichier
+```
+ou
+```
+chmod 740 fichier
+```
 
 **• Définissez un umask très restrictif qui interdit à quiconque à part vous l’accès en lecture ou en écriture,
 ainsi que la traversée de vos répertoires. Testez sur un nouveau fichier et un nouveau répertoire.**
 
+```
+umask 0077
+```
+umask 0066 aurait fonctionné seulement pour les fichiers mais aurait permis de traverser les dossiers, donc le umask 0077 est nécessaire.
+
 **• Définissez un umask très permissif qui autorise tout le monde à lire vos fichiers et traverser vos répertoires, mais n’autorise que vous à écrire. Testez sur un nouveau fichier et un nouveau répertoire.**
 
+```
+umask 0022
+```
 
 **• Définissez un umask équilibré qui vous autorise un accès complet et autorise un accès en lecture aux
 membres de votre groupe. Testez sur un nouveau fichier et un nouveau répertoire.**
 
+```
+umask 0037
+```
 
 **• Transcrivez les commandes suivantes de la notation classique à la notation octale ou vice-versa (vous
 pourrez vous aider de la commande stat pour valider vos réponses) :
-- chmod u=rx,g=wx,o=r fic
+- chmod u=rx,g=wx,o=r fic 
+```
+chmod 534 fic
+```
 - chmod uo+w,g-rx fic en sachant que les droits initiaux de fic sont r--r-x---
+```
+chmod 602 fic
+```
 - chmod 653 fic en sachant que les droits initiaux de fic sont 711
+```
+chmod u-x, g+r,o-w fic
+```
 - chmod u+x,g=w,o-r fic en sachant que les droits initiaux de fic sont r--r-x---**
+```
+chmod 520 fic
+```
 
 
 **• Affichez les droits sur le programme passwd. Que remarquez-vous ? En affichant les droits du fichier
 /etc/passwd, pouvez-vous justifier les permissions sur le programme passwd ?**
+
+```ls -l /usr/bin/passwd``` pour afficher les droits du programme passwd, on a -rwsr-xr-x. ```ls -l /etc/passwd``` pour afficher les droits du fichier passwd, on a -rw-r--r--.
+On remarque le "s" pour les droits du programme. Il est le Set User ID qui permet d'exécuter le programme en tant que l'utilisateur qui en est le propriétaire. Ainsi chaque propriétaire du compte peut changer son mot de passe sans passer par le "sudo".
+
 
 **• Access Control Lists (ACL) : suivez le tutoriel de cette page : https://doc.ubuntu-fr.org/acl.**
 **• Quotas disques : suivez le tutoriel de cette page : https://doc.ubuntu-fr.org/quota.**
